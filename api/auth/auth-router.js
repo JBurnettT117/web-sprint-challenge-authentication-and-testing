@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const Jokes = require('../jokes/jokes-model');
 const db = require('../../data/dbConfig');
 const JWT_SECRET = require('../secrets');
+const {validateUser} = require('./auth-middleware')
 
 
 router.post('/register', (req, res, next) => {//add middleware for usernamechecking here
@@ -45,15 +46,20 @@ router.post('/register', (req, res, next) => {//add middleware for usernamecheck
   */
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', validateUser, async (req, res) => {//3 and 4 on the requirements will need middleware
   const user = await db('users').where('username', req.body.username).first()
-  if (bcrypt.compare(user.password, req.body.password)) {
-    const token = buildToken(user);
-    res.json({
-      "message": `Welcome, ${user.username}`,
-      "token": token
-    })
+  if(!user){
+    res.json({message: "invalid credentials"})
+  } else {
+    if (bcrypt.compare(user.password, req.body.password)) {
+      const token = buildToken(user);
+      res.json({
+        "message": `Welcome, ${user.username}`,
+        "token": token
+      })
+    }
   }
+  
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
