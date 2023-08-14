@@ -1,7 +1,23 @@
 const router = require('express').Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const Jokes = require('../jokes/jokes-model')
+const db = require('../../data/dbConfig');
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+
+router.post('/register', (req, res, next) => {//add middleware for usernamechecking here
+  const {username, password} = req.body;
+  console.log("hit post register")
+
+  const hash = bcrypt.hashSync(password, 8);
+
+  Jokes.add({ username, password: hash})
+    .then(saved => {
+      res.status(201).json(saved)
+    })
+    .catch(next)
+
+
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
