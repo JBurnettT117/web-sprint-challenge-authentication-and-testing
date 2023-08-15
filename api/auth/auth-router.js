@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 const Jokes = require('../jokes/jokes-model');
 const db = require('../../data/dbConfig');
 const JWT_SECRET = require('../secrets');
-const {validateUser} = require('./auth-middleware')
+const {validateUser, checkUsername} = require('./auth-middleware')
 
 
-router.post('/register', validateUser, (req, res, next) => {//add middleware for usernamechecking here
+router.post('/register', validateUser, checkUsername, (req, res, next) => {//add middleware for usernamechecking here
   const {username, password} = req.body;
 
   const hash = bcrypt.hashSync(password, 8);

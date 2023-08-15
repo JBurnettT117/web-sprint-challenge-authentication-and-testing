@@ -4,7 +4,7 @@ const db = require('../data/dbConfig')
 const bcrypt = require('bcryptjs')
 
 test('sanity', () => {
-  expect(true).toBe(false)
+  expect(true).toBe(true)
 })
 
 beforeAll(async () => {
