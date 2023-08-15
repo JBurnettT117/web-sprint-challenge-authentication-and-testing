@@ -51,7 +51,7 @@ router.post('/login', validateUser, async (req, res) => {//3 and 4 on the requir
   if(!user){
     res.status(400).json({message: "invalid credentials"})
   } else {
-    if (bcrypt.compare(user.password, req.body.password)) {
+    if (bcrypt.compareSync(req.body.password, user.password)) {
       const token = buildToken(user);
       res.json({
         "message": `welcome, ${user.username}`,
