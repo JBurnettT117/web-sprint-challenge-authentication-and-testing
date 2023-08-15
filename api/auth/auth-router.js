@@ -7,7 +7,7 @@ const JWT_SECRET = require('../secrets');
 const {validateUser} = require('./auth-middleware')
 
 
-router.post('/register', (req, res, next) => {//add middleware for usernamechecking here
+router.post('/register', validateUser, (req, res, next) => {//add middleware for usernamechecking here
   const {username, password} = req.body;
 
   const hash = bcrypt.hashSync(password, 8);
