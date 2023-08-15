@@ -49,7 +49,7 @@ router.post('/register', validateUser, checkUsername, (req, res, next) => {//add
 router.post('/login', validateUser, async (req, res) => {//3 and 4 on the requirements will need middleware
   const user = await db('users').where('username', req.body.username).first()
   if(!user){
-    res.json({message: "invalid credentials"})
+    res.status(400).json({message: "invalid credentials"})
   } else {
     if (bcrypt.compare(user.password, req.body.password)) {
       const token = buildToken(user);
@@ -57,6 +57,8 @@ router.post('/login', validateUser, async (req, res) => {//3 and 4 on the requir
         "message": `welcome, ${user.username}`,
         "token": token
       })
+    } else {
+      res.status(400).json({ message: "invalid credentials" })
     }
   }
   
